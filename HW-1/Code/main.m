@@ -7,7 +7,7 @@ clear; clc;
 
 % Setting the input output file path
 imageDir = '../Images/';
-imageName = 'cathedral.jpg';
+imageName = 'settlers.jpg';
 outDir = '../Results/';
 
 % Reading the glass plate image
