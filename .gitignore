@@ -106,3 +106,4 @@ venv.bak/
 # Folders containing datasets - large files
 HW-1/Images/
 HW-1/Results/
+.DS_Store
