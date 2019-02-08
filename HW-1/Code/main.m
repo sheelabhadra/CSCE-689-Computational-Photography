@@ -1,4 +1,4 @@
-clear; clc;
+clear; clc; close all;
 
 %%% Assignment 1 - Starter code
 
@@ -7,7 +7,7 @@ clear; clc;
 
 % Setting the input output file path
 imageDir = '../Images/';
-imageName = 'monastery.jpg';
+imageName = 'lady.tif';
 outDir = '../Results/';
 
 % Reading the glass plate image
@@ -22,8 +22,11 @@ g = glassPlate(height+1:2*height, :);
 r = glassPlate(2*height+1:3*height, :);
 
 % The main part of the code. Implement the FindShift function
-rShift = FindShift(r, b);
-gShift = FindShift(g, b);
+rShift = FindShift(r, b, 'NCC');
+gShift = FindShift(g, b, 'NCC');
+
+% rShift = [50,0];
+% gShift = [0,0];
 
 % Shifting the images using the obtained shift values
 finalB = b;
