@@ -114,5 +114,3 @@ function [y_shift, x_shift] = SSD(moving, fixed, startx, endx, starty, endy)
     x_shift = xmin(1) + startx;
 end
 
-
-

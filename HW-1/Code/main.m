@@ -7,7 +7,7 @@ clear; clc; close all;
 
 % Setting the input output file path
 imageDir = '../Images/';
-imageName = 'lady.tif';
+imageName = 'emir.tif';
 outDir = '../Results/';
 
 % Reading the glass plate image
