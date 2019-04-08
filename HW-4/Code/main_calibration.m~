@@ -18,16 +18,14 @@ calibSetName = '0_Calib_Chapel';
 
 % Sample the images
 N = 5*256/(numel(filePaths)-1);
-[imgH, imgW] = size(imread(filePaths{1,1}));
+[imgH, imgW] = size(imread(filePaths(1)));
 Z = zeros(imgH*imgW, numel(filePaths));
 
+
 for j=1:numel(filePaths)
-    img = imread(filePaths{1,j});
-    img = reshape(img, [imgH*imgW,1]);
-    for i=1:N/numel(filePaths) + 1
-        k = randi([1, imgH*imgW]);
-        Z(i,j) = img(k);
-    end
+    i = randi([1, imgH*imgW]);
+    img = imread(filePaths(j));
+    Z(j) = img(i,i);
 end
 
 % Recover the camera response function using Debevec's optimization code (gsolve.m)
