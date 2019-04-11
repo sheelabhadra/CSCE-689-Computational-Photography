@@ -17,21 +17,37 @@ calibSetName = '0_Calib_Chapel';
 [filePaths, exposures, numExposures] = ParseFiles([inputDir, '/', calibSetName]);
 
 % Sample the images
+% s = RandStream('mlfg6331_64');
+rng(7);
+[imgH, imgW, nChannels] = size(imread(filePaths{1,1}));
 N = 5*256/(numel(filePaths)-1);
-[imgH, imgW] = size(imread(filePaths{1,1}));
-Z = zeros(imgH*imgW, numel(filePaths));
+N_per_image = ceil(N/numel(filePaths));
+Zred = zeros(N_per_image, numel(filePaths));
+Zgreen = Zred;
+Zblue = Zred;
 
 for j=1:numel(filePaths)
     img = imread(filePaths{1,j});
-    img = reshape(img, [imgH*imgW,1]);
-    for i=1:N/numel(filePaths) + 1
+    redChannel = img(:,:,1); % R-channel
+    redChannel = reshape(redChannel, [imgH*imgW,1]);
+    greenChannel = img(:,:,2); % G-channel
+    greenChannel = reshape(greenChannel, [imgH*imgW,1]);
+    blueChannel = img(:,:,3); % R-channel
+    blueChannel = reshape(blueChannel, [imgH*imgW,1]);
+    
+%     random_pixels = randi(s, 1:imgH*imgW, N_per_image, 'replacement', false);
+    for i=1:N_per_image
         k = randi([1, imgH*imgW]);
-        Z(i,j) = img(k);
+        Zred(i,j) = redChannel(k);
+        Zgreen(i,j) = greenChannel(k);
+        Zblue(i,j) = blueChannel(k);
     end
 end
 
 % Recover the camera response function using Debevec's optimization code (gsolve.m)
-[g, lE] = gsolve(Z, exposures, lambda, @triangle_function, Zmin, Zmax);
+[gRed, lERed] = gsolve(Zred, exposures, lambda, @triangle_function, Zmin, Zmax);
+[gGreen, lEGreen] = gsolve(Zgreen, exposures, lambda, @triangle_function, Zmin, Zmax);
+[gBlue, lEBlue] = gsolve(Zblue, exposures, lambda, @triangle_function, Zmin, Zmax);
 
 % Create the triangle function
 function [w] = triangle_function(Z)
