@@ -49,6 +49,8 @@ end
 [gGreen, lEGreen] = gsolve(Zgreen, exposures, lambda, @triangle_function, Zmin, Zmax);
 [gBlue, lEBlue] = gsolve(Zblue, exposures, lambda, @triangle_function, Zmin, Zmax);
 
+save('gFunc.mat', 'gRed', 'gGreen', 'gBlue');
+
 % Create the triangle function
 function [w] = triangle_function(Z)
     if Z >= 0 && Z < 127.5

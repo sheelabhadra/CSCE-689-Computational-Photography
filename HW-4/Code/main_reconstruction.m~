@@ -34,40 +34,25 @@ for i=1:numel(lERed)
         greenChannel = reshape(greenChannel, [imgH*imgW,1]);
         blueChannel = img(:,:,3);
         blueChannel = reshape(blueChannel, [imgH*imgW,1]);
-        temp_red = temp_red + (triangle_function(redChannel(i))*(gRed(redChannel(i)+1) - log(exposures(j))))/triangle_function(redChannel(i));
-        temp_green = temp_green + (triangle_function(greenChannel(i))*(gGreen(greenChannel(i)+1) - log(exposures(j))))/triangle_function(greenChannel(i));
-        temp_blue = temp_blue + (triangle_function(blueChannel(i))*(gBlue(blueChannel(i)+1) - log(exposures(j))))/triangle_function(blueChannel(i));
-    end
-    if mod(i, 10) == 0
-        disp(i)
+        temp_red = temp_red + (triangle_function(redChannel(i))*(gRed(redChannel(i)) - log(exposures(j))))/triangle_function(redChannel(i));
+        temp_green = temp_green + (triangle_function(greenChannel)*(gGreen(greenChannel(i)) - log(exposures(j))))/triangle_function(greenChannel(i));
+        temp_blue = temp_blue + (triangle_function(blueChannel)*(gBlue(blueChannel(i)) - log(exposures(j))))/triangle_function(blueChannel(i));
     end
     lERed(i) = temp_red;
     lEGreen(i) = temp_green;
     lEBlue(i) = temp_blue;
 end
 
-lERed = reshape(lERed, [imgH, imgW]);
-lEGreen = reshape(lEGreen, [imgH, imgW]);
-lEBlue = reshape(lEBlue, [imgH, imgW]);
+lERed = reshape(lERed);
 
 % Tonemap the image using the global operator
-resultRed = zeros([imgH, imgW]);
-resultGreen = resultRed;
-resultBlue = resultRed;
 
-for i=1:imgH
-    for j=1:imgW
-        resultRed(i,j) = lERed(i,j)/(1 + lERed(i,j));
-        resultGreen(i,j) = lEGreen(i,j)/(1 + lEGreen(i,j));
-        resultBlue(i,j) = lEBlue(i,j)/(1 + lEBlue(i,j));
-    end
-end
 
 % Tonemap the image using MATLAB's local operator
 
 % Create the triangle function
 function [w] = triangle_function(Z)
-    if (Z >= 0) && (Z < 127.5)
+    if Z >= 0 && Z < 127.5
         w = Z/127.5;
     else
         w = (255 - Z)/127.5;
